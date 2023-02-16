@@ -22,20 +22,20 @@ const DashBoardComponent = () => {
 
   function filterRestroData(value) {
     let filteredData = restroList.filter((item) =>
-      item.data.name.includes(value)
+      item.data.name.toLowerCase().includes(value.toLowerCase())
     );
     setfilterRestroList(filteredData);
   }
-  console.log(filterRestroList);
+
   return (
     <>
       <SearchBox filterFuntion={filterRestroData} />
-      {filterRestroList?.length === 0 ? (
+      {restroList?.length === 0 ? (
         <Shimmer />
       ) : (
         <>
           <div className="card-list">
-            {restroList?.length > 0
+            {filterRestroList?.length > 0
               ? filterRestroList?.map((item) => (
                   <RestroCard {...item.data} key={item.data.id} />
                 ))
