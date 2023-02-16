@@ -1,18 +1,27 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 const RestroDetails = () => {
-	let params = useParams()
-	console.log(params.id)
+	let { id } = useParams()
+	let [restoData, setrestoData] = useState({})
+
 	useEffect(() => {
 		getRestroDetails()
-	}, [params])
+	}, [id])
+
 	async function getRestroDetails() {
-		let responseData = await fetch(`https://www.swiggy.com/dapi/menu/v4/full?lat=12.9063171&lng=77.6985485&menuId=${params.id}`)
-		console.log(await responseData.json())
+		let responseData = await fetch(`https://www.swiggy.com/dapi/menu/v4/full?lat=12.9063171&lng=77.6985485&menuId=${id}`)
+		let rawData = await responseData.json();
+		setrestoData(rawData)
 	}
+
 	return (
-		<h1>welcome to restro details</h1>
+		<div>
+			<h1>
+				{restoData?.data?.name}
+			</h1>
+		</div>
+
 	)
 }
 

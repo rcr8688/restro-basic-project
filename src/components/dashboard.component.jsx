@@ -1,41 +1,50 @@
-import { useEffect, useState, React } from "react"
-import { RESTRO_LIST_API } from "../shared/constant"
-import RestroCard from "./RestroCard.component"
-import SearchBox from "./searchbox.component"
+import { useEffect, useState, React } from "react";
+import { RESTRO_LIST_API } from "../shared/constant";
+import RestroCard from "./RestroCard.component";
+import SearchBox from "./searchbox.component";
+import Shimmer from "./shimmer";
 
-// function component 
+// function component
 const DashBoardComponent = () => {
-	let [restroList, setRestroList] = useState([])
-	let [filterRestroList, setfilterRestroList] = useState([])
+  let [restroList, setRestroList] = useState([]);
+  let [filterRestroList, setfilterRestroList] = useState([]);
 
-	useEffect(() => {
-		fetchData()
-	}, [])
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-	async function fetchData() {
-		let responsePromise = await fetch(RESTRO_LIST_API)
-		let sotedData =await responsePromise.json()
-		setRestroList(sotedData)
-		setfilterRestroList(sotedData?.data?.cards[2].data.data.cards)
-	}
+  async function fetchData() {
+    let responsePromise = await fetch(RESTRO_LIST_API);
+    let sotedData = await responsePromise.json();
+    setRestroList(sotedData?.data?.cards[2].data.data.cards);
+    setfilterRestroList(sotedData?.data?.cards[2].data.data.cards);
+  }
 
-	function filterRestroData(value) {
-		let cardData = restroList?.data?.cards[2].data.data.cards
-		let filteredData = cardData.filter(item => item.data.name.includes(value))
-		setfilterRestroList(filteredData)
-	}
-	console.log(filterRestroList)
-	return (
-		<>
-			<SearchBox filterFuntion={filterRestroData} />
-			<div className="card-list">
-				{
-					filterRestroList?.length > 0 ? filterRestroList?.map(item =>
-						<RestroCard {...item.data} key={item.data.id} />) : ""
-				}
-			</div>
-		</>
-	)
-}
+  function filterRestroData(value) {
+    let filteredData = restroList.filter((item) =>
+      item.data.name.includes(value)
+    );
+    setfilterRestroList(filteredData);
+  }
+  console.log(filterRestroList);
+  return (
+    <>
+      <SearchBox filterFuntion={filterRestroData} />
+      {filterRestroList?.length === 0 ? (
+        <Shimmer />
+      ) : (
+        <>
+          <div className="card-list">
+            {restroList?.length > 0
+              ? filterRestroList?.map((item) => (
+                  <RestroCard {...item.data} key={item.data.id} />
+                ))
+              : ""}
+          </div>
+        </>
+      )}
+    </>
+  );
+};
 
-export default DashBoardComponent
+export default DashBoardComponent;
