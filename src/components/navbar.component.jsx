@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-
+import { useContext } from "react";
+import userContext from "../utils/contexts/userContext";
 let brandWidth = {
   width: "50px",
   height: "50px",
@@ -12,9 +13,11 @@ let brand = (
 );
 
 const Navbar = () => {
+  const { user } = useContext(userContext);
   return (
     <div className="brand">
       {brand}
+
       <div className="nav">
         <ul>
           <li>
@@ -22,6 +25,12 @@ const Navbar = () => {
           </li>
           <li>
             <Link to="/about">about</Link>
+          </li>
+          <li>
+            <Link to="/mart">instaMart</Link>
+          </li>
+          <li>
+            <span> {user.name}</span>
           </li>
           <li>Login</li>
         </ul>
